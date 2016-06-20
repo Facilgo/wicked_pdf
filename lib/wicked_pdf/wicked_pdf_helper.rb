@@ -45,6 +45,14 @@ module WickedPdfHelper
       image_tag wicked_pdf_asset_path(img), options
     end
 
+    def wicked_pdf_base64_image_tag(filepath, options = {})
+      file = File.open(filepath, 'r')
+      base64 = Base64.encode64(file.read).gsub(/\s+/, '')
+      content_type = MIME::Types.type_for(filepath).first.content_type
+      data = "data:#{content_type};base64,#{Rack::Utils.escape(base64)}"
+      wicked_pdf_image_tag(data, **options)
+    end
+    
     def wicked_pdf_javascript_src_tag(jsfile, options={})
       jsfile = WickedPdfHelper.add_extension(jsfile, 'js')
       javascript_include_tag wicked_pdf_asset_path(jsfile), options
