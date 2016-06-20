@@ -79,7 +79,7 @@ module WickedPdfHelper
           File.join(Rails.public_path, asset_path(source).sub(/\A#{Rails.application.config.action_controller.relative_url_root}/, ''))
         end
       else
-        Rails.application.assets.find_asset(source).pathname
+        Rails.application.assets.find_asset(source).try(:pathname)
       end
     end
 
@@ -95,7 +95,7 @@ module WickedPdfHelper
     end
 
     def read_asset(source)
-      if precompiled_asset?(source) 
+      if precompiled_asset?(source)
         if set_protocol(asset_path(source)) =~ URI_REGEXP
           read_from_uri(source)
         else
